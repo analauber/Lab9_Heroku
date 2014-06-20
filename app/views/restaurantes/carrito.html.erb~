@@ -1,0 +1,59 @@
+<br>
+<center>
+
+<p id="notice"><%= notice %></p>
+
+<h1 style="color:green;">Orden</h1>
+
+<h3 style="color:green;">Seleccione los productos que quiera ordenar</h3>
+
+
+<br>
+<style type="text/css">
+.myTable { background-color:#eee;border-collapse:collapse; }
+.myTable th { background-color:#45A91A;color:white;width:50%; }
+.myTable td, .myTable th { text-align:center; padding:5px;border:1px solid #000; }
+</style>
+
+  <% a = [] %>
+  <% k = 0 %>
+  <% for n in @restaurante.productos %>
+  <% 	b = [] %>
+  <% 	b[0] = n.nombre_producto+" "+n.precio.to_s %>
+  <%    b[1] = n.id %>
+  <%    a[k] = b %>
+  <% 	k += 1 %>
+  <% end %>
+
+<%= form_tag(ordenes_path, :method => "post") do %>
+    <%= select_tag(:Producto, options_for_select(a)) %>
+    <%= submit_tag "Agregar", data: { confirm: '¿Está seguro de que desea agregar este platillo?' } %>
+<% end %>
+
+
+<table class="myTable" style="width:500px">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio</th>
+    </tr>
+  </thead>
+  <tbody>
+
+     <tr>	
+	<td> <%= @orden.productos %> </td>
+	<td> <%= @orden.precio %> </td>
+     </tr>
+  </tbody>
+</table> 
+
+<br>
+
+<%= button_to "Confirmar", agregar_path(cancelar: false), method: :post%>
+<%= button_to "Cancelar", agregar_path(cancelar: true), method: :post%>
+
+<br>
+<br>
+
+<%= link_to 'Volver', @restaurante %> 
+</center>

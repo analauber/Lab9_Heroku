@@ -1,0 +1,10 @@
+<center>
+<br>
+<h1 style="color:green;" >Editar Restaurante</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', @restaurante %> |
+<%= link_to 'Back', restaurantes_path %>
+
+</center>

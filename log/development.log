@@ -1,0 +1,106 @@
+  [1m[36m (128.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35m (0.3ms)[0m  select sqlite_version(*)
+  [1m[36m (133.1ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateRestaurantes (20140526215107)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  CREATE TABLE "restaurantes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "nombre_restaurante" varchar(255), "telefono" integer, "correo_electronico" varchar(255), "fax" integer, "tipo_comida_id" integer, "señas" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140526215107"]]
+  [1m[35m (136.1ms)[0m  commit transaction
+Migrating to CreateProductos (20140526215304)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "productos" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "nombre_producto" varchar(255), "precio" integer, "descripcion" varchar(255), "tipo_producto_id" integer, "restaurante_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140526215304"]]
+  [1m[35m (132.7ms)[0m  commit transaction
+Migrating to CreateTipoComidas (20140526215517)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "tipo_comidas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tipo_comida" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140526215517"]]
+  [1m[35m (140.2ms)[0m  commit transaction
+Migrating to CreateTipoProductos (20140526215541)
+  [1m[36m (0.3ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "tipo_productos" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tipo_producto" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140526215541"]]
+  [1m[35m (142.0ms)[0m  commit transaction
+Migrating to CreateUbicacions (20140526215701)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  CREATE TABLE "ubicacions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "provincia" varchar(255), "canton" varchar(255), "distrito" varchar(255), "restaurante_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140526215701"]]
+  [1m[35m (139.9ms)[0m  commit transaction
+Migrating to CreateHomes (20140528023443)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "homes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140528023443"]]
+  [1m[35m (151.7ms)[0m  commit transaction
+Migrating to AddUbicacionIdToRestaurante (20140602014510)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "restaurantes" ADD "ubicacion_id" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140602014510"]]
+  [1m[35m (140.6ms)[0m  commit transaction
+Migrating to RemoveRestauranteIdFromUbicacion (20140602014554)
+  [1m[36m (0.3ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  CREATE TEMPORARY TABLE "aubicacions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "provincia" varchar(255), "canton" varchar(255), "distrito" varchar(255), "restaurante_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "ubicacions"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "ubicacions"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "ubicacions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "provincia" varchar(255), "canton" varchar(255), "distrito" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "aubicacions"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "aubicacions"[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20140602014554"]]
+  [1m[36m (126.6ms)[0m  [1mcommit transaction[0m
+Migrating to DeviseCreateUsers (20140603220222)
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36m (0.9ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar(255) DEFAULT '' NOT NULL, "encrypted_password" varchar(255) DEFAULT '' NOT NULL, "reset_password_token" varchar(255), "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar(255), "last_sign_in_ip" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.6ms)[0m  CREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")
+  [1m[36m (0.3ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.4ms)[0m  CREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140603220222"]]
+  [1m[35m (132.2ms)[0m  commit transaction
+Migrating to AddTipoToUser (20140608172238)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "users" ADD "tipo" varchar(255)
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140608172238"]]
+  [1m[35m (151.9ms)[0m  commit transaction
+Migrating to AddUserIdToRestaurante (20140608204608)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "restaurantes" ADD "user_id" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140608204608"]]
+  [1m[35m (142.3ms)[0m  commit transaction
+Migrating to CreateOrdens (20140615075902)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  CREATE TABLE "ordens" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "restaurante_id" integer, "productos" varchar(255), "precio" float, "descripcion" varchar(255), "fecha" date, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140615075902"]]
+  [1m[35m (151.3ms)[0m  commit transaction
+Migrating to CreateEstados (20140615185454)
+  [1m[36m (0.3ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "estados" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "estado" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140615185454"]]
+  [1m[35m (129.4ms)[0m  commit transaction
+Migrating to AddEstadoIdToOrden (20140615185518)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "ordens" ADD "estado_id" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20140615185518"]]
+  [1m[35m (119.5ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m

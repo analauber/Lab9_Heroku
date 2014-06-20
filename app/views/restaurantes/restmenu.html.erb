@@ -1,0 +1,57 @@
+<br>
+<center>
+
+<p id="notice"><%= notice %></p>
+
+<h1 style="color:green;">Menú</h1>
+
+<br>
+<style type="text/css">
+.myTable { background-color:#eee;border-collapse:collapse; }
+.myTable th { background-color:#45A91A;color:white;width:50%; }
+.myTable td, .myTable th { text-align:center; padding:5px;border:1px solid #000; }
+</style>
+
+<table class="myTable" style="width:500px">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+<% @restaurante.productos.joins(:tipo_producto).order('tipo_productos.tipo_producto').each do |m| %>
+      <tr>
+        <td>  <%= m.nombre_producto %></td>
+        <td><%= m.precio %> </td>
+	<td><%= m.tipo_producto.tipo_producto %> </td>
+	<% if user_signed_in? %> 
+		<% if current_user.id == @restaurante.user_id %>
+			<td><%= link_to 'Editar', platillo_edit_path(foo_param: m.id) %></td>
+			<td><%= link_to 'Eliminar', m, method: :delete, data: { confirm: '¿Está seguro de que desea eliminar este platillo?' } %></td>
+		<% end %>
+	<% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<br>
+
+<p>
+  <% if user_signed_in? %> 
+	<% if current_user.id == @restaurante.user_id %>
+		<%= link_to 'Agregar Platillo', platillo_path%>
+	<% end %>
+  <% end %>
+  <%= link_to 'Ordenar en este restaurante', carrito_path%>
+</p>
+
+<br>
+<br>
+
+<%= link_to 'Volver', @restaurante %> 
+</center>

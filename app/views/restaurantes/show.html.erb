@@ -1,0 +1,48 @@
+<center>
+<p id="notice"><%= notice %></p>
+<br>
+
+<h1 style="color:green;">Restaurante</h1>
+
+<p>
+  <strong>Nombre restaurante:</strong>
+  <%= @restaurante.nombre_restaurante %>
+</p>
+
+<p>
+  <strong>Telefono:</strong>
+  <%= @restaurante.telefono %>
+</p>
+
+<p>
+  <strong>Correo electronico:</strong>
+  <%= @restaurante.correo_electronico %>
+</p>
+
+<p>
+  <strong>Fax:</strong>
+  <%= @restaurante.fax %>
+</p>
+
+<p>
+  <strong>Tipo comida:</strong>
+  <%= @restaurante.tipo_comida.tipo_comida %>
+</p>
+
+<p>
+  <strong>Direccion:</strong>
+  <%= @restaurante.ubicacion.provincia+" "+@restaurante.ubicacion.canton+" "+@restaurante.ubicacion.distrito %>
+</p>
+
+<p>
+  <strong>Señas:</strong>
+  <%= @restaurante.señas %>
+</p>
+
+<p>
+  <strong>Menu:</strong>
+  <%= link_to 'Vea El Menu', rest_menu_path%>
+</p>
+
+<%= link_to 'Volver', restaurantes_path %>
+</center>

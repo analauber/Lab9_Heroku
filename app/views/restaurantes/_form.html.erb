@@ -1,0 +1,71 @@
+<%= form_for(@restaurante) do |f| %>
+  <% if @restaurante.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@restaurante.errors.count, "error") %> prohibited this restaurante from being saved:</h2>
+
+      <ul>
+      <% @restaurante.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+     Tipo de Comida:
+  </p>
+  <% a = [] %>
+  <% k = 0 %>
+  <% for n in TipoComida.all %>
+  <% 	b = [] %>
+  <% 	b[0] = n.tipo_comida %>
+  <%    b[1] = n.id %>
+  <%    a[k] = b %>
+  <% 	k += 1 %>
+  <% end %>
+  
+  <%= select(:restaurante, :tipo_comida_id, a) %>
+
+  <% c = [] %>
+  <% j = 0 %>
+  <% for i in Ubicacion.all %>
+  <% 	d = [] %>
+  <% 	d[0] = i.provincia+" "+i.canton+" "+i.distrito %>
+  <%    d[1] = i.id %>
+  <%    c[j] = d %>
+  <% 	j += 1 %>
+  <% end %>
+
+  <p>
+     Direccion:
+  </p>
+  <%= select(:restaurante, :ubicacion_id, c) %>
+
+  <div class="field">
+    <%= f.label :nombre_restaurante %><br>
+    <%= f.text_field :nombre_restaurante %>
+  </div> 
+  <div class="field">
+    <%= f.label :telefono %><br>
+    <%= f.number_field :telefono %>
+  </div>
+  <div class="field">
+    <%= f.label :correo_electronico %><br>
+    <%= f.text_field :correo_electronico %>
+  </div>
+  <div class="field">
+    <%= f.label :fax %><br>
+    <%= f.number_field :fax %>
+  </div>
+  <div class="field">
+    <%= f.label :señas %><br>
+    <%= f.text_field :señas %>
+  </div>
+  
+  <%= f.hidden_field :user_id, :value => current_user.id %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+

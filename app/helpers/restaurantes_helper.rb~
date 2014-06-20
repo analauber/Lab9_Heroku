@@ -1,0 +1,8 @@
+module RestaurantesHelper
+	def products
+		$products = ""	
+	end
+	def precio
+		$precio = 0.0	
+	end
+end

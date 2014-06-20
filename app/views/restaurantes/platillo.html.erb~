@@ -1,0 +1,53 @@
+<center>
+<br>
+<h1 style="color:green;">Nuevo Restaurante</h1>
+
+<%= form_for(@producto) do |f| %>
+  <% if @producto.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@producto.errors.count, "error") %> prohibited this producto from being saved:</h2>
+
+      <ul>
+      <% @producto.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nombre_producto %><br>
+    <%= f.text_field :nombre_producto %>
+  </div>
+  <div class="field">
+    <%= f.label :precio %><br>
+    <%= f.number_field :precio %>
+  </div>
+  <div class="field">
+    <%= f.label :descripcion %><br>
+    <%= f.text_field :descripcion %>
+  </div>
+
+  <p>
+     Tipo de Platillo:
+  </p>
+  <% a = [] %>
+  <% k = 0 %>
+  <% for n in TipoProducto.all %>
+  <% 	b = [] %>
+  <% 	b[0] = n.tipo_producto %>
+  <%    b[1] = n.id %>
+  <%    a[k] = b %>
+  <% 	k += 1 %>
+  <% end %>
+	  
+  <%= select(:producto, :tipo_producto_id, a) %>
+
+  <%= f.hidden_field :restaurante_id, :value => @restaurante.id %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+</center>
