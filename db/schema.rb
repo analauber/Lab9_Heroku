@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140615185518) do
+ActiveRecord::Schema.define(version: 20140619080131) do
 
   create_table "estados", force: true do |t|
     t.string   "estado"
@@ -75,6 +75,12 @@ ActiveRecord::Schema.define(version: 20140615185518) do
     t.string   "provincia"
     t.string   "canton"
     t.string   "distrito"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unos", force: true do |t|
+    t.string   "num"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
