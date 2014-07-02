@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
-  resources :unos
+ 
+  get 'user/new'
+
+  get 'user/create'
+
+  get 'user/show'
+
+  get 'user/edit'
+
+  get 'user/update'
+
+  get 'user/destroy'
+
+  get 'user/index'
+
+  resources :opinions
 
   resources :estados
 
@@ -14,9 +29,14 @@ Rails.application.routes.draw do
 
   resources :tipo_comidas
 
-  resources :productos
+  resources :productos 
 
-  resources :restaurantes
+  resources :restaurantes do
+    member do
+      post 'upvote'
+      post 'dislike'
+    end
+  end
 
   get '/restaurantes/:id/menu' => 'restaurantes#restmenu', as: 'rest_menu'  
 	
@@ -29,6 +49,12 @@ Rails.application.routes.draw do
   post '/restaurantes/:id/carrito' => 'restaurantes#carrito', as: 'ordenes'
 
   post '/restaurantes/:id/agregar' => 'restaurantes#agregar', as: 'agregar'
+
+  get '/restaurantes/:id/solicitud' => 'restaurantes#solicitud', as: 'solicitudes'
+
+  get '/restaurantes/:id/comentarios' => 'restaurantes#comentario', as: 'comentario'
+
+  post '/restaurantes/:id/comentarios' => 'restaurantes#comentario', as: 'comentario_agregar'
 
   get '/' => 'homes#index', as: 'indice' 
 

@@ -1,5 +1,5 @@
 class RestaurantesController < ApplicationController
-  before_action :set_restaurante, only: [:show, :edit, :update, :destroy, :restmenu, :carrito, :platillo, :platillo_edit, :agregar]
+  before_action :set_restaurante, only: [:show, :edit, :update, :destroy, :restmenu, :carrito, :platillo, :platillo_edit, :agregar, :solicitud, :comentario]
   before_action :authenticate_user!, only: [:carrito, :edit, :update, :destroy, :new]
   before_action
 
@@ -16,9 +16,35 @@ class RestaurantesController < ApplicationController
     end
   end
 
+  def comentario
+    if(params[:comentario] != nil)
+	 @restaurante.opinions.create(user_id: current_user.id, comentario: params[:comentario])
+    end
+  end
+
+  def solicitud
+    @ordens = Orden.all 
+  end
+
   def platillo_edit
      @producto = Producto.find(params[:foo_param])
      render 'platillo'
+  end
+
+  def upvote
+    @restaurante = Restaurante.find(params[:id])
+    @restaurante.votes.create(user_id: current_user.id)
+    redirect_to(restaurantes_path)
+  end
+
+  def dislike
+    @restaurante = Restaurante.find(params[:id])
+    @restaurante.votes.each do |v|
+  	  if v.user_id == current_user.id
+	        v.destroy  	
+	  end
+    end
+    redirect_to(restaurantes_path)
   end
 
   def platillo
@@ -37,16 +63,23 @@ class RestaurantesController < ApplicationController
     end
  
     if(@orden == nil)
-	@orden = Orden.new(user_id: current_user.id, restaurante_id: @restaurante.id, productos: $products, precio: $precio, estado_id: 1)
+	@orden = Orden.new(user_id: current_user.id, restaurante_id: @restaurante.id, productos: $products, precio: $precio, estado_id: 1, fecha: Time.zone.now, descripcion: "")
 	@orden.save
     end
 
     if(params[:Producto] != nil)
     	producto = Producto.find(params[:Producto])
-    else
+    else	
 	producto = Producto.new(nombre_producto: "", precio: 0)
     end 
 
+    if(params[:Descripcion] != nil)
+	 desc = params[:Descripcion]
+    else
+	 desc = ""	
+    end
+    
+    @orden.descripcion += desc+" "
     @orden.productos += producto.nombre_producto+" "
     @orden.precio += producto.precio
     @orden.save
@@ -61,11 +94,29 @@ class RestaurantesController < ApplicationController
         end
 	if(params[:cancelar]=="1")
 		@orden.destroy
+		redirect_to(restaurantes_path)
 	else
 		@orden.estado_id = 2
 		@orden.save 
+         	ModelMailer.new_record_notification(@orden, current_user).deliver
+		ModelMailer.email_to_admin(@orden, @restaurante.user).deliver
+		 values = {
+		   :business => 'jmarchena93-facilitator@gmail.com',
+		   :cmd => '_cart',
+		   :upload => 1,
+		   :return => 'http://localhost:3000/restaurantes',
+		   :involve => @restaurante.id
+		  }
+
+		    values.merge!({
+		      "amount_1" => @orden.precio,
+		      "item_name_1" => @orden.productos,
+		      "item_number_1" => @orden.id
+		    })
+   
+ 		 redirect_to URI.encode("https://www.sandbox.paypal.com/cr/cgi-bin/webscr?"+ values.map {|k,v| "#{k}=#{v}"}.join("&")) 
+
 	end	
-	redirect_to(restaurantes_path)
   end
 
   # GET /restaurantes/1
@@ -76,9 +127,6 @@ class RestaurantesController < ApplicationController
   # GET /restaurantes/new
   def new
     @restaurante = Restaurante.new(user_id: current_user.id)
-    if current_user.tipo == "0"
-    	redirect_to ('/restaurantes')
-    end
   end
 
   # GET /restaurantes/1/edit

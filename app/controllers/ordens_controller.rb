@@ -10,6 +10,8 @@ class OrdensController < ApplicationController
   # GET /ordens/1
   # GET /ordens/1.json
   def show
+	session[:return_to] ||= request.referer
+	redirect_to session.delete(:return_to)
   end
 
   # GET /ordens/new
@@ -69,6 +71,6 @@ class OrdensController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def orden_params
-      params.require(:orden).permit(:user_id, :restaurante_id, :productos, :precio, :descripcion, :fecha)
+      params.require(:orden).permit(:user_id, :restaurante_id, :estado_id, :productos, :precio, :descripcion, :fecha)
     end
 end
